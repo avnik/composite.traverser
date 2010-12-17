@@ -1,0 +1,7 @@
+.installed.cfg
+composite.traverser.egg-info/
+bin/
+eggs/
+develop-eggs/
+parts/
+*.pyc

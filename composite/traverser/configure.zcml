@@ -1,0 +1,12 @@
+<configure xmlns="http://pylonshq.com/pyramid">
+    <adapter
+        factory=".traverser.DefaultPyramidTraverser"
+        provides=".interfaces.IPluggableTraverser"
+        for="zope.interface.Interface zope.interface.Interface"
+        />
+    <adapter
+        factory=".traverser.ModelGraphTraverser"
+        provides="pyramid.interfaces.ITraverser"
+        for="*"
+        />
+</configure>
