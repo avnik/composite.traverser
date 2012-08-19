@@ -57,6 +57,21 @@ class TestTraverser(unittest.TestCase):
         first['second'] = second
         return root
 
+    def test_is_locateable(self):
+        from zope.location.interfaces import ILocation
+        from zope.location.location import LocationProxy
+        from composite.traverser.traverser import is_locateable
+
+        class M(object):
+            __name__ = "M"
+            __parent__ = None
+
+        self.failIf(is_locateable(object()))
+        self.failUnless(is_locateable(M()))
+        proxied = LocationProxy(object(), "name", None)
+        self.failUnless(is_locateable(proxied))
+        
+
     def test_traverser_is_our_traverser(self):
         from pyramid.interfaces import ITraverser
         from pyramid.testing import get_current_registry
