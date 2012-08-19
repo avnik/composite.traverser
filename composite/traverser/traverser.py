@@ -1,6 +1,6 @@
 import re
-from zope.interface import classProvides
-from zope.interface import implements
+from zope.interface import implementer
+from zope.interface import provider
 
 from zope.location.location import LocationProxy
 
@@ -35,6 +35,8 @@ def _locatable(ob):
     if hasattr(ob, '__name__') and hasattr(ob, '__parent__'):
         return True
 
+@implementer(ITraverser)
+@provider(ITraverserFactory)
 class ModelGraphTraverser(object):
     """ A pluggable model graph traverser:
         * when object does not provides ILocation, object will be wrapped
@@ -44,8 +46,6 @@ class ModelGraphTraverser(object):
     when no object in the graph supplies either a ``__name__`` or a
     ``__parent__`` attribute (ie. no object 'provides the ILocation
     interface') ."""
-    classProvides(ITraverserFactory)
-    implements(ITraverser)
 
     VIEW_SELECTOR = "@@"
     NAMESPACE_SELECTOR = "++"

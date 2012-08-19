@@ -1,12 +1,13 @@
 import unittest
-from zope.interface import Interface, implements, directlyProvides
+from zope.interface import Interface, implementer, directlyProvides
 from pyramid.interfaces import IRequest
 from pyramid.testing import cleanUp, setUp, get_current_registry, DummyModel
 from pyramid.testing import DummyRequest
 from composite.traverser.interfaces import IPluggableTraverser
 
+@implementer(IRequest)
 class TestRequest(DummyRequest):
-    implements(IRequest)
+    pass
 
 class TestTraverser(unittest.TestCase):
     def tearDown(self):
@@ -113,12 +114,12 @@ class AnotherContext(object):
 class ISecond(Interface):
     pass
 
+@implementer(ISecond)
 class Second(object):
-    implements(ISecond)
     pass
 
+@implementer(IPluggableTraverser)
 class CustomTraverser(object):
-    implements(IPluggableTraverser)
     def __init__(self, context, request):
         self.context = context
         self.data = DummyModel()
