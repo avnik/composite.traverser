@@ -40,12 +40,12 @@ def is_locateable(ob):
 class ModelGraphTraverser(object):
     """ A pluggable model graph traverser:
         * when object does not provides ILocation, object will be wrapped
-          with LocationProxy
+          with LocationProxy, or when object no supplied either a 
+          ``__name__`` or a ``__parent__`` attribute 
+          (ie. no object 'provides the ILocation interface') .
         * if ISecurityProxyFactory registered, it used fot additional
           proxying traver
-    when no object in the graph supplies either a ``__name__`` or a
-    ``__parent__`` attribute (ie. no object 'provides the ILocation
-    interface') ."""
+    """
 
     VIEW_SELECTOR = "@@"
     NAMESPACE_SELECTOR = "++"
