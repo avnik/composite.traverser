@@ -29,7 +29,7 @@ class DefaultPyramidTraverser(object):
 
         return getter(segment)
 
-def _locatable(ob):
+def is_locateable(ob):
     if ILocation.providedBy(ob):
         return True
     if hasattr(ob, '__name__') and hasattr(ob, '__parent__'):
@@ -130,7 +130,7 @@ class ModelGraphTraverser(object):
                                 virtual_root_path=vroot_tuple,
                                 root=self.root)
 
-                if not _locatable(next):
+                if not is_locateable(next):
                     next = LocationProxy(next, ob, segment)
 
                 if proxy:
