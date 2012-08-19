@@ -15,7 +15,7 @@ install_requires=[
         'pyramid',
         'pyramid_zcml',
         'zope.interface',
-        'zope.proxy'
+        'zope.location'
     ]
 
 test_requires = ['zope.testing']
