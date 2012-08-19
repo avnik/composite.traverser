@@ -10,7 +10,13 @@ try:
 except IOError:
     README = CHANGES = ''
 
-install_requires=['setuptools', 'pyramid', 'zope.interface', 'zope.proxy']
+install_requires=[
+        'setuptools',
+        'pyramid',
+        'zope.interface',
+        'zope.proxy'
+    ]
+
 test_requires = ['zope.testing']
 
 __version__ = "0.1"
