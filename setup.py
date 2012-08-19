@@ -13,6 +13,7 @@ except IOError:
 install_requires=[
         'setuptools',
         'pyramid',
+        'pyramid_zcml',
         'zope.interface',
         'zope.proxy'
     ]

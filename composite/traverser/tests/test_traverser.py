@@ -17,6 +17,7 @@ class TestTraverser(unittest.TestCase):
         from pyramid.configuration import Configurator
         from pyramid.interfaces import IRootFactory
         c = setUp()
+        c.include('pyramid_zcml')
         c.load_zcml('composite.traverser.tests:configure.zcml')
         r = c.registry
         r.registerUtility(lambda x: self.models, IRootFactory)
