@@ -20,7 +20,7 @@ install_requires=[
 
 test_requires = ['zope.testing']
 
-__version__ = "0.1"
+__version__ = "0.2"
 
 setup(name='composite.traverser',
       version=__version__,
