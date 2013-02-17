@@ -10,4 +10,8 @@
         provides="pyramid.interfaces.ITraverser"
         for="*"
         />
+    <adapter
+        factory=".traverser.DefaultView"
+        provides=".interfaces.IDefaultView"
+        for="* pyramid.interfaces.IRequest"/>
 </configure>

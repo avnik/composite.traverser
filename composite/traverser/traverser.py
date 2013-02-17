@@ -11,6 +11,7 @@ from pyramid.traversal import traversal_path
 
 from composite.traverser.interfaces import ISecurityProxyFactory
 from composite.traverser.interfaces import IPluggableTraverser
+from composite.traverser.interfaces import IDefaultView
 
 _marker = object()
 namespace_pattern = re.compile('[+][+]([a-zA-Z0-9_]+)[+][+]')
@@ -34,6 +35,13 @@ def is_locateable(ob):
         return True
     if hasattr(ob, '__name__') and hasattr(ob, '__parent__'):
         return True
+
+@implementer(IDefaultView)
+class DefaultView(object):
+    view_name = u""
+
+    def __init__(self, context, request):
+        pass
 
 @implementer(ITraverser)
 @provider(ITraverserFactory)
@@ -141,6 +149,9 @@ class ModelGraphTraverser(object):
                 ob = next
                 i += 1
 
-        return dict(context=ob, view_name=u'', subpath=subpath,
+        default_view = registry.getMultiAdapter((ob, request), IDefaultView)
+        return dict(context=ob,
+                    view_name=default_view.view_name, 
+                    subpath=subpath,
                     traversed=vpath_tuple, virtual_root=vroot,
                     virtual_root_path=vroot_tuple, root=self.root)
