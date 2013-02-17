@@ -4,9 +4,13 @@ from pyramid.interfaces import IRequest
 from pyramid.testing import cleanUp, setUp, get_current_registry, DummyModel
 from pyramid.testing import DummyRequest
 from composite.traverser.interfaces import IPluggableTraverser
+from composite.traverser.interfaces import IDefaultView
 
 @implementer(IRequest)
 class TestRequest(DummyRequest):
+    pass
+
+class ICustomizedView(Interface):
     pass
 
 class TestTraverser(unittest.TestCase):
@@ -26,6 +30,8 @@ class TestTraverser(unittest.TestCase):
             (ISecond, IRequest), IPluggableTraverser)
         r.registerAdapter(NamedCustomTraverser, 
             (ISecond, IRequest), IPluggableTraverser, name="named")
+        r.registerAdapter(CustomDefaultView,
+            (ICustomizedView, IRequest), IDefaultView)
 
     def _getTargetClass(self):
         from composite.traverser.traverser import ModelGraphTraverser
@@ -55,6 +61,7 @@ class TestTraverser(unittest.TestCase):
         second = Second()
         root['first'] = first
         first['second'] = second
+        root['customized'] = ContextWithCustomizedView()
         return root
 
     def test_is_locateable(self):
@@ -99,6 +106,7 @@ class TestTraverser(unittest.TestCase):
     def test_path(self):
         D = self._traverse(self.models, "/first/second/third")
         self.failUnlessEqual(D['context'].__name__, "third")
+        self.failUnlessEqual(D['view_name'], u'')
 
     def test_view(self):
         D = self._traverse(self.models, "/first/second/third/@@named_view")
@@ -109,6 +117,7 @@ class TestTraverser(unittest.TestCase):
         D = self._traverse(self.models, "/first/second/++named++context")
         self.failUnless(isinstance(D['context'], AnotherContext))
         self.failUnlessEqual(D['context'].value, 'context')
+        self.failUnlessEqual(D['view_name'], u'')
 
     def test_namespace_view(self):
         D = self._traverse(self.models, 
@@ -116,6 +125,10 @@ class TestTraverser(unittest.TestCase):
         self.failUnless(isinstance(D['context'], AnotherContext))
         self.failUnlessEqual(D['context'].value, 'context')
         self.failUnlessEqual(D['view_name'], 'named_view')
+
+    def test_customised_default_view(self):
+        D = self._traverse(self.models, "/customized")
+        self.failUnlessEqual(D['view_name'], 'changed')
 
 class AnotherContext(object):
     def __init__(self, value):
@@ -149,6 +162,17 @@ class CustomTraverser(object):
 class NamedCustomTraverser(CustomTraverser):
     def __getitem__(self, item):
         return AnotherContext(item)
+
+@implementer(IDefaultView)
+class CustomDefaultView(object):
+    def __init__(self, *a):
+        print "bla bla"
+        pass
+    view_name = u"changed"
+
+@implementer(ICustomizedView)
+class ContextWithCustomizedView(DummyModel):
+    pass
 
 def test_suite():
     return unittest.makeSuite(TestTraverser)
